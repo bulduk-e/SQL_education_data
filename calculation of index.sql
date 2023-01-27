@@ -17,7 +17,7 @@ SELECT country_code, university_enrollment, (( university_enrollment - (SELECT M
 FROM university_enrollment_rate;
 
 CREATE TABLE Education.index_recap
-SELECT countries.country_code, countries.country_name, index_expenditure.index_expenditure, index_laborforce.index_laborforce, index_unemployment.index_unemployment, index_university.index_university
+SELECT countries.country_code, countries.country_name, index_expenditure.index_expenditure, index_laborforce.index_laborforce, 1-index_unemployment.index_unemployment as index_unemployment, index_university.index_university
 FROM countries
 LEFT JOIN index_expenditure
 ON countries.country_code = index_expenditure.country_code
@@ -39,3 +39,14 @@ SELECT * FROM index_recap;
 SELECT country_name, ((index_expenditure*0.2) + (index_laborforce*0.21) + (index_unemployment*0.27) + (index_university*0.32))*100 as country_quality_score
 FROM index_recap
 ORDER BY country_quality_score DESC;
+
+SELECT countries.country_code, countries.country_name, round(index_expenditure.index_expenditure,3) as index_expenditure, round(index_laborforce.index_laborforce,3) as index_laborforce, round(index_unemployment.index_unemployment,3) as index_unemployment, round(index_university.index_university,3) as index_university
+FROM countries
+LEFT JOIN index_expenditure
+ON countries.country_code = index_expenditure.country_code
+LEFT JOIN index_laborforce
+ON countries.country_code = index_laborforce.country_code
+LEFT JOIN index_unemployment
+ON countries.country_code = index_unemployment.country_code
+LEFT JOIN index_university
+ON countries.country_code = index_university.country_code;
